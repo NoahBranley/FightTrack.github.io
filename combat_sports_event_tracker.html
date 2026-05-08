@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0c;
+  --bg2:#111115;
+  --bg3:#1a1a20;
+  --bg4:#22222a;
+  --border:#2a2a35;
+  --border2:#3a3a48;
+  --text:#f0f0f0;
+  --text2:#999aaa;
+  --text3:#666778;
+  --accent:#e8e820;
+  --accent2:#ff4444;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh}
+#app{min-height:100vh}
+
+/* NAV */
+.nav{display:flex;align-items:stretch;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;overflow-x:auto}
+.nav-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:0.05em;padding:0 20px;display:flex;align-items:center;color:var(--accent);text-transform:uppercase;white-space:nowrap;border-right:1px solid var(--border)}
+.nav-tabs{display:flex;align-items:stretch;flex:1}
+.nav-tab{padding:0 16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;border:none;background:none;color:var(--text2);border-bottom:2px solid transparent;transition:all 0.15s;white-space:nowrap}
+.nav-tab:hover{color:var(--text);background:var(--bg3)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-right{display:flex;align-items:center;padding:0 16px;gap:8px;border-left:1px solid var(--border);margin-left:auto}
+.tz-label{font-size:11px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase}
+.tz-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;padding:5px 10px;border-radius:4px;cursor:pointer;letter-spacing:0.05em}
+
+/* HERO */
+.hero{padding:40px 24px 32px;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);border-bottom:1px solid var(--border)}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(36px,6vw,64px);text-transform:uppercase;letter-spacing:0.03em;line-height:0.9}
+.hero-title span{color:var(--accent)}
+.hero-sub{color:var(--text2);font-size:14px;margin-top:10px;font-weight:400}
+.hero-meta{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap}
+.hero-badge{background:var(--bg3);border:1px solid var(--border2);padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-radius:3px;color:var(--text2)}
+.hero-badge.active{color:var(--accent);border-color:var(--accent);background:rgba(232,232,32,0.06)}
+
+/* ORG HEADER */
+.org-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px}
+.org-logo-block{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:0.05em;text-align:center;flex-shrink:0}
+.org-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;text-transform:uppercase;letter-spacing:0.04em}
+.org-desc{color:var(--text2);font-size:13px;margin-top:3px}
+.refresh-btn{margin-left:auto;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:8px 18px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px}
+.refresh-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border)}
+.refresh-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+/* EVENTS GRID */
+.events-section{padding:24px}
+.section-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text3);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+
+/* EVENT CARD */
+.event-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color 0.15s}
+.event-card:hover{border-color:var(--border2)}
+.event-poster{width:100%;aspect-ratio:2/3;object-fit:cover;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.poster-placeholder{width:100%;aspect-ratio:5/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.poster-bg-text{position:absolute;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:80px;text-transform:uppercase;opacity:0.04;letter-spacing:-2px;user-select:none}
+.poster-org{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;position:relative;z-index:1}
+.poster-number{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;position:relative;z-index:1}
+.poster-img{width:100%;height:100%;object-fit:cover}
+.has-poster{padding:0}
+.event-info{padding:14px 16px}
+.event-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:0.05em;line-height:1.1}
+.event-location{color:var(--text2);font-size:12px;margin-top:4px;display:flex;align-items:center;gap:5px}
+.event-date{color:var(--text2);font-size:12px;margin-top:2px}
+.event-main{font-size:13px;margin-top:8px;color:var(--text);font-weight:500;padding-top:8px;border-top:1px solid var(--border)}
+.event-main-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px}
+
+/* COUNTDOWN */
+.countdown{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.countdown-unit{flex:1;text-align:center;background:var(--bg3);border-radius:4px;padding:8px 4px}
+.countdown-num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:22px;line-height:1;display:block;color:var(--accent)}
+.countdown-num.urgent{color:var(--accent2)}
+.countdown-label{font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);margin-top:2px;display:block}
+.countdown-live{color:var(--accent2);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.live-dot{width:8px;height:8px;background:var(--accent2);border-radius:50%;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* POSTER UPLOAD */
+.poster-upload{padding:14px 16px;border-top:1px solid var(--border)}
+.poster-upload-btn{background:var(--bg3);border:1px dashed var(--border2);color:var(--text3);padding:8px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;width:100%;transition:all 0.15s}
+.poster-upload-btn:hover{border-color:var(--text3);color:var(--text2)}
+.poster-input{display:none}
+
+/* LOADING */
+.loading-state{padding:48px 24px;text-align:center}
+.loading-spinner{width:36px;height:36px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+.loading-detail{font-size:12px;color:var(--text3);margin-top:6px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.5}
+
+/* ERROR / EMPTY */
+.error-state{padding:32px 24px;background:rgba(255,68,68,0.06);border:1px solid rgba(255,68,68,0.2);border-radius:6px;margin:24px}
+.error-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:0.05em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}
+.error-msg{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* MANUAL ADD */
+.add-section{padding:24px;border-top:1px solid var(--border)}
+.add-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:8px}
+.add-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:20px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);margin-bottom:6px;display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;font-family:'Barlow',sans-serif;font-size:13px;border-radius:4px;outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--accent)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-actions{display:flex;gap:10px;margin-top:24px}
+.btn-primary{background:var(--accent);color:#000;border:none;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:opacity 0.15s;flex:1}
+.btn-primary:hover{opacity:0.9}
+.btn-cancel{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.15s}
+.btn-cancel:hover{border-color:var(--border);color:var(--text)}
+
+/* ALL EVENTS PAGE */
+.all-events-section{padding:24px}
+.org-section-header{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:0.1em;text-transform:uppercase;margin:20px 0 12px;padding:10px 0;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.org-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* SHEET IMPORT */
+.import-section{padding:16px 24px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.import-label{font-size:11px;color:var(--text3);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.1em;text-transform:uppercase}
+.import-input{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:7px 12px;font-size:12px;font-family:'Barlow',sans-serif;border-radius:4px;outline:none;width:280px;max-width:100%}
+.import-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;border-radius:4px;cursor:pointer;white-space:nowrap}
+.import-btn:hover{color:var(--text)}
+
+.empty-state{padding:48px 24px;text-align:center;color:var(--text3)}
+.empty-icon{font-size:48px;margin-bottom:12px;opacity:0.3}
+.empty-text{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.empty-sub{font-size:13px;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="app">
+<nav class="nav">
+  <div class="nav-brand">⚔ FightCalendar</div>
+  <div class="nav-tabs" id="navTabs"></div>
+  <div class="nav-right">
+    <span class="tz-label">TZ</span>
+    <select class="tz-select" id="tzSelect">
+      <option value="Australia/Perth">Perth (AWST)</option>
+      <option value="Australia/Sydney">Sydney (AEDT)</option>
+      <option value="Asia/Tokyo">Tokyo (JST)</option>
+      <option value="Europe/Paris">Paris (CET)</option>
+      <option value="Europe/London">London (GMT)</option>
+      <option value="America/New_York">New York (ET)</option>
+      <option value="America/Los_Angeles">Los Angeles (PT)</option>
+    </select>
+  </div>
+</nav>
+<div id="pageContent"></div>
+</div>
+
+<script>
+const ORGS = [
+  {id:'all',name:'All Events',color:'#e8e820',desc:'All upcoming combat sports events'},
+  {id:'ufc',name:'UFC',color:'#d4001f',desc:'Ultimate Fighting Championship — MMA, Las Vegas'},
+  {id:'rizin',name:'RIZIN',color:'#e8e820',desc:'RIZIN Fighting Federation — MMA & Kickboxing, Japan'},
+  {id:'one',name:'ONE',color:'#e8601a',desc:'ONE Championship — MMA, Muay Thai & More, Asia'},
+  {id:'rws',name:'RWS',color:'#1a8fe8',desc:'Rajadamnern World Series — Muay Thai, Thailand'},
+  {id:'k1',name:'K-1',color:'#cc2020',desc:'K-1 World GP — Kickboxing & Karate, Japan'},
+  {id:'glory',name:'GLORY',color:'#9b30e0',desc:'GLORY Kickboxing — European Kickboxing'},
+  {id:'rise',name:'RISE',color:'#20c860',desc:'RISE Kickboxing — Japanese Kickboxing'},
+];
+
+let currentOrg = 'all';
+let currentTZ = 'Australia/Perth';
+let eventsCache = {};
+let manualEvents = JSON.parse(localStorage.getItem('manualEvents')||'{}');
+let posters = JSON.parse(localStorage.getItem('eventPosters')||'{}');
+let countdownTimers = [];
+
+const API_KEY = '';
+
+function getOrgById(id){return ORGS.find(o=>o.id===id)}
+
+function renderNav(){
+  const tabs = document.getElementById('navTabs');
+  tabs.innerHTML = ORGS.map(o=>`<button class="nav-tab ${o.id===currentOrg?'active':''}" onclick="navigate('${o.id}')">${o.name}</button>`).join('');
+}
+
+function navigate(orgId){
+  currentOrg=orgId;
+  renderNav();
+  renderPage();
+}
+
+document.getElementById('tzSelect').addEventListener('change',e=>{
+  currentTZ=e.target.value;
+  renderPage();
+});
+
+function formatDate(iso, tz){
+  if(!iso) return 'Date TBD';
+  try{
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-AU',{timeZone:tz,weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  }catch{return iso}
+}
+function formatTime(iso, tz){
+  if(!iso) return '';
+  try{
+    const d = new Date(iso);
+    return d.toLocaleTimeString('en-AU',{timeZone:tz,hour:'2-digit',minute:'2-digit'});
+  }catch{return ''}
+}
+function getTZLabel(tz){
+  const map={'Australia/Perth':'AWST','Australia/Sydney':'AEDT','Asia/Tokyo':'JST','Europe/Paris':'CET','Europe/London':'GMT','America/New_York':'ET','America/Los_Angeles':'PT'};
+  return map[tz]||tz;
+}
+
+function getCountdown(iso){
+  if(!iso) return null;
+  const now=Date.now();
+  const target=new Date(iso).getTime();
+  const diff=target-now;
+  if(diff<=0) return {live:true};
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  return{d,h,m,s,urgent:d<3};
+}
+
+function renderCountdown(iso, cardId){
+  const cd=getCountdown(iso);
+  if(!cd) return `<div class="countdown"><div style="color:var(--text3);font-size:12px">Date TBD</div></div>`;
+  if(cd.live) return `<div class="countdown"><div class="countdown-live"><span class="live-dot"></span>LIVE NOW</div></div>`;
+  const cls=cd.urgent?'countdown-num urgent':'countdown-num';
+  return `<div class="countdown" id="cd_${cardId}">
+    <div class="countdown-unit"><span class="${cls}">${String(cd.d).padStart(2,'0')}</span><span class="countdown-label">Days</span></div>
+    <div class="countdown-unit"><span class="${cls}">${String(cd.h).padStart(2,'0')}</span><span class="countdown-label">Hrs</span></div>
+    <div class="countdown-unit"><span class="${cls}">${String(cd.m).padStart(2,'0')}</span><span class="countdown-label">Min</span></div>
+    <div class="countdown-unit"><span class="${cls}">${String(cd.s).padStart(2,'0')}</span><span class="countdown-label">Sec</span></div>
+  </div>`;
+}
+
+function startCountdowns(){
+  countdownTimers.forEach(clearInterval);
+  countdownTimers=[];
+  document.querySelectorAll('[data-countdown]').forEach(el=>{
+    const iso=el.dataset.countdown;
+    const cardId=el.dataset.cardid;
+    const t=setInterval(()=>{
+      const cdEl=document.getElementById('cd_'+cardId);
+      if(!cdEl){clearInterval(t);return}
+      const cd=getCountdown(iso);
+      if(!cd) return;
+      if(cd.live){cdEl.innerHTML=`<div class="countdown-live"><span class="live-dot"></span>LIVE NOW</div>`;return}
+      const cls=cd.urgent?'countdown-num urgent':'countdown-num';
+      const units=cdEl.querySelectorAll('.countdown-unit');
+      if(units.length===4){
+        [String(cd.d).padStart(2,'0'),String(cd.h).padStart(2,'0'),String(cd.m).padStart(2,'0'),String(cd.s).padStart(2,'0')].forEach((v,i)=>{
+          const n=units[i].querySelector('.countdown-num');
+          if(n){n.textContent=v;n.className=cls}
+        });
+      }
+    },1000);
+    countdownTimers.push(t);
+  });
+}
+
+function renderEventCard(event, orgId){
+  const org=getOrgById(orgId)||getOrgById(event.orgId)||{color:'#888',name:'?'};
+  const cardId=event.id||Math.random().toString(36).slice(2);
+  const posterData=posters[cardId];
+  const hasPoster=!!posterData;
+  const posterHtml=hasPoster?
+    `<div class="poster-placeholder has-poster" style="height:200px"><img src="${posterData}" class="poster-img" alt="Event poster"></div>`:
+    `<div class="poster-placeholder">
+      <div class="poster-bg-text">${org.name}</div>
+      <span class="poster-org" style="color:${org.color}">${org.name}</span>
+      <span class="poster-number" style="color:var(--text)">${event.name}</span>
+    </div>`;
+
+  return `<div class="event-card">
+    ${posterHtml}
+    <div class="event-info">
+      <div class="event-name">${event.name}</div>
+      ${event.location?`<div class="event-location">📍 ${event.location}</div>`:''}
+      <div class="event-date">📅 ${formatDate(event.date,currentTZ)} ${formatTime(event.date,currentTZ)?'· '+formatTime(event.date,currentTZ)+' '+getTZLabel(currentTZ):''}</div>
+      ${event.mainEvent?`<div class="event-main"><div class="event-main-label">Main Event</div>${event.mainEvent}</div>`:''}
+      <div data-countdown="${event.date||''}" data-cardid="${cardId}">
+        ${renderCountdown(event.date,cardId)}
+      </div>
+    </div>
+    <div class="poster-upload">
+      <input type="file" accept="image/*" class="poster-input" id="poster_${cardId}" onchange="uploadPoster('${cardId}', this)">
+      <button class="poster-upload-btn" onclick="document.getElementById('poster_${cardId}').click()">
+        ${hasPoster?'🖼 Replace Poster':'📌 Add Poster'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function uploadPoster(cardId, input){
+  const file=input.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    posters[cardId]=e.target.result;
+    localStorage.setItem('eventPosters',JSON.stringify(posters));
+    renderPage();
+  };
+  reader.readAsDataURL(file);
+}
+window.uploadPoster=uploadPoster;
+
+async function fetchEventsForOrg(orgId){
+  if(eventsCache[orgId]) return eventsCache[orgId];
+  const org=getOrgById(orgId);
+  if(!org||orgId==='all') return [];
+
+  const prompt=`You are a combat sports data assistant. Return ONLY a JSON array of upcoming events for ${org.name} (${org.desc}).
+
+For each event include: id (string slug), name (event name), date (ISO 8601 datetime if known, else null), location (city/venue), mainEvent (main fight or null).
+
+Return only events that are confirmed and upcoming (from today ${new Date().toISOString().split('T')[0]} onward). Include up to 6 events. If no confirmed events are known, return an empty array [].
+
+RESPOND ONLY WITH THE JSON ARRAY. No explanation, no markdown, no backticks. Example:
+[{"id":"ufc-310","name":"UFC 310","date":"2025-12-07T22:00:00-07:00","location":"Las Vegas, NV","mainEvent":"Fighter A vs Fighter B"}]`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await resp.json();
+    let text='';
+    for(const block of(data.content||[])){
+      if(block.type==='text') text+=block.text;
+    }
+    text=text.trim().replace(/```json|```/g,'').trim();
+    const start=text.indexOf('[');
+    const end=text.lastIndexOf(']');
+    if(start>=0&&end>start){
+      const events=JSON.parse(text.slice(start,end+1));
+      const withOrg=events.map((e,i)=>({...e,orgId:orgId,id:e.id||(orgId+'-'+i)}));
+      eventsCache[orgId]=withOrg;
+      return withOrg;
+    }
+    return [];
+  }catch(err){
+    console.error(err);
+    return null;
+  }
+}
+
+let loadingOrgs={};
+
+async function renderOrgPage(orgId){
+  const org=getOrgById(orgId);
+  const manual=(manualEvents[orgId]||[]);
+  const content=document.getElementById('pageContent');
+
+  if(loadingOrgs[orgId]){
+    content.innerHTML=`
+    <div class="org-header">
+      <div class="org-logo-block" style="background:${org.color}22;color:${org.color}">${org.name}</div>
+      <div><div class="org-name" style="color:${org.color}">${org.name}</div><div class="org-desc">${org.desc}</div></div>
+    </div>
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Searching for ${org.name} events...</div>
+      <div class="loading-detail">Using web search to find upcoming confirmed events</div>
+    </div>`;
+    return;
+  }
+
+  let events=eventsCache[orgId];
+  let fetchError=false;
+
+  if(events===undefined){
+    loadingOrgs[orgId]=true;
+    content.innerHTML=`
+    <div class="org-header">
+      <div class="org-logo-block" style="background:${org.color}22;color:${org.color}">${org.name}</div>
+      <div><div class="org-name" style="color:${org.color}">${org.name}</div><div class="org-desc">${org.desc}</div></div>
+    </div>
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Searching for ${org.name} events...</div>
+      <div class="loading-detail">Using web search to find upcoming confirmed events</div>
+    </div>`;
+
+    events=await fetchEventsForOrg(orgId);
+    loadingOrgs[orgId]=false;
+    if(events===null){fetchError=true;events=[];}
+    else eventsCache[orgId]=events;
+  }
+
+  const allEvents=[...events,...manual];
+  allEvents.sort((a,b)=>{
+    if(!a.date) return 1;
+    if(!b.date) return -1;
+    return new Date(a.date)-new Date(b.date);
+  });
+
+  content.innerHTML=`
+  <div class="org-header">
+    <div class="org-logo-block" style="background:${org.color}22;color:${org.color}">${org.name}</div>
+    <div><div class="org-name" style="color:${org.color}">${org.name}</div><div class="org-desc">${org.desc}</div></div>
+    <button class="refresh-btn" onclick="refreshOrg('${orgId}')">↻ Refresh</button>
+  </div>
+  ${fetchError?`<div class="error-state"><div class="error-title">Could not load live events</div><div class="error-msg">The API fetch encountered an error. You can add events manually below, or try refreshing.</div></div>`:''}
+  <div class="events-section">
+    <div class="section-label">${allEvents.length} Upcoming Event${allEvents.length!==1?'s':''}</div>
+    ${allEvents.length===0?`<div class="empty-state">
+      <div class="empty-icon">🥊</div>
+      <div class="empty-text">No upcoming events found</div>
+      <div class="empty-sub">Try refreshing to search for the latest confirmed events, or add one manually.</div>
+    </div>`:`<div class="events-grid">${allEvents.map(e=>renderEventCard(e,orgId)).join('')}</div>`}
+  </div>
+  <div class="add-section">
+    <button class="add-btn" onclick="showAddModal('${orgId}')">+ Add Event Manually</button>
+  </div>
+  `;
+  startCountdowns();
+}
+
+async function renderAllPage(){
+  const content=document.getElementById('pageContent');
+  content.innerHTML=`
+  <div style="padding:28px 24px 16px;border-bottom:1px solid var(--border)">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;text-transform:uppercase;letter-spacing:0.04em">All Events</div>
+    <div style="color:var(--text2);font-size:13px;margin-top:4px">Upcoming events across all promotions</div>
+  </div>
+  <div id="allContent" style="padding:16px 24px">
+    <div class="loading-state"><div class="loading-spinner"></div><div class="loading-text">Loading all events...</div></div>
+  </div>`;
+
+  const orgIds=ORGS.filter(o=>o.id!=='all').map(o=>o.id);
+  const results=await Promise.allSettled(orgIds.map(id=>fetchEventsForOrg(id)));
+  
+  let html='';
+  orgIds.forEach((id,i)=>{
+    const org=getOrgById(id);
+    const events=(results[i].status==='fulfilled'&&results[i].value)||[];
+    const manual=manualEvents[id]||[];
+    const all=[...events,...manual].sort((a,b)=>{
+      if(!a.date) return 1; if(!b.date) return -1;
+      return new Date(a.date)-new Date(b.date);
+    });
+    if(all.length===0) return;
+    html+=`<div class="org-section-header"><span class="org-dot" style="background:${org.color}"></span>${org.name}</div>`;
+    html+=`<div class="events-grid">${all.map(e=>renderEventCard(e,id)).join('')}</div>`;
+  });
+
+  const allContent=document.getElementById('allContent');
+  if(allContent){
+    allContent.innerHTML=html||`<div class="empty-state"><div class="empty-icon">🥊</div><div class="empty-text">No events found</div><div class="empty-sub">Visit individual org pages and refresh to load their events.</div></div>`;
+    startCountdowns();
+  }
+}
+
+function renderPage(){
+  if(currentOrg==='all'){renderAllPage();}
+  else{renderOrgPage(currentOrg);}
+}
+
+function refreshOrg(orgId){
+  delete eventsCache[orgId];
+  renderOrgPage(orgId);
+}
+window.refreshOrg=refreshOrg;
+
+let addModalOrg=null;
+function showAddModal(orgId){
+  addModalOrg=orgId;
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.id='addModal';
+  overlay.innerHTML=`<div class="modal">
+    <div class="modal-title">Add Event — ${getOrgById(orgId).name}</div>
+    <div class="form-group">
+      <label class="form-label">Event Name *</label>
+      <input class="form-input" id="mName" placeholder="e.g. UFC 310" required>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="mDate" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time</label>
+        <input class="form-input" id="mTime" type="time">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input class="form-input" id="mLoc" placeholder="e.g. T-Mobile Arena, Las Vegas">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Main Event</label>
+      <input class="form-input" id="mMain" placeholder="Fighter A vs Fighter B">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div>`;
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});
+  document.body.appendChild(overlay);
+}
+window.showAddModal=showAddModal;
+
+function closeModal(){
+  const m=document.getElementById('addModal');
+  if(m) m.remove();
+}
+window.closeModal=closeModal;
+
+function saveEvent(){
+  const name=document.getElementById('mName').value.trim();
+  if(!name) return;
+  const date=document.getElementById('mDate').value;
+  const time=document.getElementById('mTime').value;
+  const loc=document.getElementById('mLoc').value.trim();
+  const main=document.getElementById('mMain').value.trim();
+  const isoDate=date?(time?new Date(date+'T'+time).toISOString():new Date(date).toISOString()):null;
+  const event={id:'manual-'+Date.now(),name,date:isoDate,location:loc,mainEvent:main,orgId:addModalOrg};
+  if(!manualEvents[addModalOrg]) manualEvents[addModalOrg]=[];
+  manualEvents[addModalOrg].push(event);
+  localStorage.setItem('manualEvents',JSON.stringify(manualEvents));
+  closeModal();
+  renderPage();
+}
+window.saveEvent=saveEvent;
+
+renderNav();
+renderPage();
+</script>
+</body>
+</html>
